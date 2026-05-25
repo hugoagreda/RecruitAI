@@ -10,7 +10,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "jspdf": "^4.2.1",
-    "next": "15.3.2",
+    "next": "15.3.8",
     "openai": "^6.39.0",
     "pdf-parse": "^2.4.5",
     "react": "^19.0.0",
