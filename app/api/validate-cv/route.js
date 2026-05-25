@@ -1,0 +1,29 @@
+import OpenAI from 'openai';
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+export async function POST(request) {
+  try {
+    const { cvText } = await request.json();
+
+    if (!cvText || cvText.trim().length < 20) {
+      return Response.json({ success: false, error: 'Texto demasiado corto.' }, { status: 400 });
+    }
+
+    const response = await client.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      temperature: 0,
+      response_format: { type: 'json_object' },
+      messages: [{
+        role: 'user',
+        content: `¿Es el siguiente texto un CV/hoja de vida? Responde SOLO con JSON válido: { "isCv": true|false, "confidence": 0-100, "reason": "razón breve" }\n\nTEXTO:\n${cvText.slice(0, 3000)}`,
+      }],
+    });
+
+    const parsed = JSON.parse(response.choices?.[0]?.message?.content ?? '{}');
+    return Response.json({ success: true, ...parsed });
+  } catch (err) {
+    console.error('validate-cv error', err);
+    return Response.json({ success: false, error: err.message ?? 'Error interno.' }, { status: 500 });
+  }
+}
