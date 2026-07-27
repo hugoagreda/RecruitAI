@@ -1,9 +1,8 @@
 import OpenAI from 'openai';
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export async function POST(request) {
   try {
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const { candidateName, resumen, skills_gap, categorias, jobSummary } = await request.json();
 
     if (!jobSummary && !skills_gap?.length) {

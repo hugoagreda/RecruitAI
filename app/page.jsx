@@ -211,7 +211,7 @@ function Tooltip({ text }) {
         onMouseEnter={() => setShow(true)}
         onMouseLeave={() => setShow(false)}
         onClick={() => setShow(v => !v)}
-        className="w-4 h-4 rounded-full border border-slate-300 text-slate-400 text-[10px] font-bold flex items-center justify-center hover:border-blue-400 hover:text-blue-500 transition-colors flex-shrink-0"
+        className="w-4 h-4 rounded-full border border-slate-300 text-slate-400 text-[10px] font-bold flex items-center justify-center hover:border-blue-400 hover:text-blue-500 transition-colors shrink-0"
         type="button"
       >?</button>
       {show && (
@@ -256,7 +256,7 @@ function LoadingModal({ message }) {
       <div className="absolute inset-0 bg-black/40" />
       <div className="relative bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 z-10">
         <div className="flex items-center gap-3">
-          <svg className="w-6 h-6 text-blue-600 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-blue-600 animate-spin shrink-0" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
@@ -344,7 +344,7 @@ function ConfigPanel({ config, onChange }) {
 
 function LeaveGuard({ onConfirm, onCancel }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
       <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-4 animate-fadeUp">
         <p className="font-display font-bold text-slate-900 text-lg mb-1">Abandonar evaluacion</p>
         <p className="text-sm text-slate-500 mb-6">El analisis se esta ejecutando. Si abandonas ahora se perderan los resultados parciales.</p>
@@ -513,7 +513,7 @@ function UploadView({ onAnalyze, onClientError }) {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
         <div className="lg:col-span-3 space-y-5">
           {/* Oferta */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
               <div>
                 <p className="font-display font-bold text-slate-900 text-sm">Oferta de trabajo</p>
@@ -564,13 +564,13 @@ function UploadView({ onAnalyze, onClientError }) {
               ) : (
                 <textarea value={jobText} onChange={(e) => setJobText(e.target.value)}
                   placeholder="Pega aqui el texto completo de la oferta de trabajo — puesto, requisitos, descripcion..."
-                  className="w-full h-36 resize-none text-sm text-slate-700 placeholder-slate-300 border border-slate-200 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent leading-relaxed" />
+                  className="w-full h-36 resize-none text-sm text-slate-700 placeholder-slate-300 border border-slate-200 rounded-xl p-4 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent leading-relaxed" />
               )}
             </div>
           </div>
 
           {/* CVs */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
               <div>
                 <p className="font-display font-bold text-slate-900 text-sm">Candidatos</p>
@@ -604,11 +604,11 @@ function UploadView({ onAnalyze, onClientError }) {
                 <div className="space-y-1.5 max-h-48 overflow-y-auto">
                   {cvFiles.map((f, i) => (
                     <div key={i} className="flex items-center gap-2.5 px-3 py-2 bg-slate-50 rounded-lg border border-slate-200">
-                      <svg className="w-4 h-4 text-rose-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       <span className="text-xs text-slate-600 flex-1 truncate">{f.name}</span>
-                      <button type="button" onClick={() => removeCv(f.name)} className="text-slate-300 hover:text-rose-500 transition-colors flex-shrink-0">
+                      <button type="button" onClick={() => removeCv(f.name)} className="text-slate-300 hover:text-rose-500 transition-colors shrink-0">
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -643,7 +643,7 @@ function UploadView({ onAnalyze, onClientError }) {
 
         {/* Config */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             <button type="button" onClick={() => setShowConfig(!showConfig)}
               className="w-full px-5 py-4 flex items-center justify-between text-left lg:cursor-default">
               <div>
@@ -704,7 +704,7 @@ function LoadingView({ cvFiles, currentIndex, completed }) {
             return (
               <div key={i} className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
                 active ? 'bg-blue-50 border-blue-200' : done ? 'bg-white border-slate-200' : 'bg-slate-50 border-transparent'}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 transition-all ${
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all ${
                   done ? 'bg-emerald-100 text-emerald-600' :
                   active ? 'bg-blue-100 text-blue-600' : 'bg-slate-200 text-slate-400'}`}>
                   {done ? (
@@ -717,7 +717,7 @@ function LoadingView({ cvFiles, currentIndex, completed }) {
                   {f.name}
                 </span>
                 {active && (
-                  <svg className="w-4 h-4 text-blue-400 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-blue-400 animate-spin shrink-0" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                   </svg>
@@ -773,7 +773,7 @@ function InterviewQuestionsPanel({ candidateName, result, jobSummary, onGenerate
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="font-display font-semibold text-slate-900 text-sm">Preguntas para la entrevista</p>
@@ -815,7 +815,7 @@ function InterviewQuestionsPanel({ candidateName, result, jobSummary, onGenerate
                 <ol className="space-y-2">
                   {questions.map((q, i) => (
                     <li key={i} className="text-sm text-slate-700 flex gap-2">
-                      <span className={`font-bold flex-shrink-0 ${meta.color}`}>{i + 1}.</span>
+                      <span className={`font-bold shrink-0 ${meta.color}`}>{i + 1}.</span>
                       <span>{q}</span>
                     </li>
                   ))}
@@ -850,7 +850,7 @@ function CandidateDetail({ result, name, onBack, showInterviewQuestions = false,
       )}
       <div className={`rounded-2xl border p-6 ${scoreBgCls(result.match_percentage)}`}>
         <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-          <div className="flex-shrink-0"><GaugeChart value={result.match_percentage} width={180} /></div>
+          <div className="shrink-0"><GaugeChart value={result.match_percentage} width={180} /></div>
           <div className="flex-1">
             <div className="flex items-center gap-2.5 mb-2 flex-wrap">
               {name && <p className="font-display font-bold text-lg text-slate-900">{name}</p>}
@@ -861,14 +861,14 @@ function CandidateDetail({ result, name, onBack, showInterviewQuestions = false,
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5">
           <p className="font-display font-semibold text-slate-900 text-sm mb-4">Distribucion por area</p>
           <div className="flex items-center gap-4">
             <DonutChart data={donutData} size={120} />
             <div className="space-y-2 flex-1">
               {cats.map((c) => (
                 <div key={c.key} className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: c.color }} />
+                  <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
                   <span className="text-xs text-slate-500 flex-1 truncate">{c.label}</span>
                   <span className="text-xs font-bold tabular-nums" style={{ color: c.color }}>{c.score}</span>
                 </div>
@@ -876,14 +876,14 @@ function CandidateDetail({ result, name, onBack, showInterviewQuestions = false,
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 space-y-4">
           <p className="font-display font-semibold text-slate-900 text-sm">Puntuacion por categoria</p>
           {cats.map((c) => <HBar key={c.key} label={c.label} score={c.score} />)}
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {cats.map((c) => (
-          <div key={c.key} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+          <div key={c.key} className="bg-white rounded-xl border border-slate-200 shadow-xs p-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-semibold text-slate-700">{c.label}</p>
               <span className={`text-sm font-bold tabular-nums ${scoreCls(c.score)}`}>{c.score}</span>
@@ -916,7 +916,7 @@ function CandidateDetail({ result, name, onBack, showInterviewQuestions = false,
       {((result.skills_match?.length ?? 0) > 0 || (result.skills_gap?.length ?? 0) > 0) && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {result.skills_match?.length > 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4">
               <p className="text-xs font-semibold text-slate-700 mb-3">Habilidades coincidentes</p>
               <div className="flex flex-wrap gap-1.5">
                 {result.skills_match.map((s, i) => (
@@ -926,7 +926,7 @@ function CandidateDetail({ result, name, onBack, showInterviewQuestions = false,
             </div>
           )}
           {result.skills_gap?.length > 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-4">
               <p className="text-xs font-semibold text-slate-700 mb-3">Habilidades no detectadas</p>
               <div className="flex flex-wrap gap-1.5">
                 {result.skills_gap.map((s, i) => (
@@ -1251,13 +1251,13 @@ function ResultsView({ results, config, onReset, jobSummary }) {
             const cats = Object.entries(CAT_LABELS).map(([k, l]) => ({ label: l, score: c.data.categorias?.[k]?.score ?? 0 }));
             return (
               <button key={i} type="button" onClick={() => setSelected(i)}
-                className="w-full bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-blue-300 hover:shadow-md transition-all p-5 text-left animate-fadeUp"
+                className="w-full bg-white rounded-2xl border border-slate-200 shadow-xs hover:border-blue-300 hover:shadow-md transition-all p-5 text-left animate-fadeUp"
                 style={{ animationDelay: `${i * 60}ms` }}>
                 <div className="flex items-center gap-5 flex-wrap">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-display font-bold text-sm flex-shrink-0 ${
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-display font-bold text-sm shrink-0 ${
                     i === 0 ? 'bg-amber-100 text-amber-700' : i === 1 ? 'bg-slate-100 text-slate-600' :
                     i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-slate-50 text-slate-400'}`}>{i + 1}</div>
-                  <div className="flex-shrink-0 -mt-1">
+                  <div className="shrink-0 -mt-1">
                     <MiniGauge value={pct} size={52} />
                     <p className={`text-center text-xs font-bold tabular-nums -mt-1 ${scoreCls(pct)}`}>{pct}%</p>
                   </div>
@@ -1270,7 +1270,7 @@ function ResultsView({ results, config, onReset, jobSummary }) {
                       {cats.map(cat => <HBar key={cat.label} label={cat.label} score={cat.score} />)}
                     </div>
                   </div>
-                  <svg className="w-5 h-5 text-slate-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-5 h-5 text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </div>

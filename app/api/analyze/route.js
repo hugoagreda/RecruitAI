@@ -1,7 +1,5 @@
 import OpenAI from 'openai';
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 const WEIGHTS = {
   integral:    { formacion: 0.20, experiencia: 0.25, conocimientos_tecnicos: 0.40, soft_skills: 0.15 },
   tecnico:     { formacion: 0.10, experiencia: 0.15, conocimientos_tecnicos: 0.60, soft_skills: 0.15 },
@@ -29,6 +27,7 @@ const FOCO_INSTRUCTIONS = {
 
 export async function POST(request) {
   try {
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const { jobText, cvText, config = {}, jobSummary } = await request.json();
 
     if (!jobText || !cvText) {
