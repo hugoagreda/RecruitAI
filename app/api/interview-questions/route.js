@@ -1,13 +1,20 @@
 import OpenAI from 'openai';
+import { checkBudget, recordSpend } from '../../../lib/quota';
+import { costEUR } from '../../../lib/pricing';
+
+const PROJECT = 'recruitai';
+const MODEL = 'gpt-4o-mini'; // generacion con matiz: se queda en mini por calidad
 
 export async function POST(request) {
   try {
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const { candidateName, resumen, skills_gap, categorias, jobSummary } = await request.json();
 
     if (!jobSummary && !skills_gap?.length) {
       return Response.json({ success: false, error: 'Faltan datos del candidato.' }, { status: 400 });
     }
+
+    const budget = await checkBudget();
+    if (!budget.allowed) return Response.json({ success: false, error: 'demo_agotada' }, { status: 503 });
 
     const weakCats = Object.entries(categorias ?? {})
       .filter(([, v]) => (v?.score ?? 100) < 65)
@@ -40,17 +47,20 @@ Devuelve SOLO JSON válido:
   }
 }`;
 
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: MODEL,
       temperature: 0.3,
       response_format: { type: 'json_object' },
       messages: [{ role: 'user', content: prompt }],
     });
 
+    await recordSpend(PROJECT, costEUR(MODEL, response.usage));
+
     const parsed = JSON.parse(response.choices?.[0]?.message?.content ?? '{}');
     return Response.json({ success: true, preguntas: parsed.preguntas ?? {} });
   } catch (err) {
     console.error('interview-questions error', err);
-    return Response.json({ success: false, error: err.message ?? 'Error interno.' }, { status: 500 });
+    return Response.json({ success: false, error: 'Error interno.' }, { status: 500 });
   }
 }

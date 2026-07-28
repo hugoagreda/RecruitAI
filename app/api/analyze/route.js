@@ -1,4 +1,9 @@
 import OpenAI from 'openai';
+import { checkBudget, recordSpend } from '../../../lib/quota';
+import { costEUR } from '../../../lib/pricing';
+
+const PROJECT = 'recruitai';
+const MODEL = 'gpt-4o-mini'; // scoring: NO se baja de aqui, es la calidad de la demo
 
 const WEIGHTS = {
   integral:    { formacion: 0.20, experiencia: 0.25, conocimientos_tecnicos: 0.40, soft_skills: 0.15 },
@@ -6,11 +11,10 @@ const WEIGHTS = {
   experiencia: { formacion: 0.10, experiencia: 0.50, conocimientos_tecnicos: 0.30, soft_skills: 0.10 },
 };
 
-// Split años_totales vs relevancia dentro de la categoría experiencia según foco
 const EXP_SUBFACTOR_WEIGHTS = {
   integral:    { años: 0.50, relevancia: 0.50 },
-  tecnico:     { años: 0.30, relevancia: 0.70 }, // importa más que la exp sea tech-relevante
-  experiencia: { años: 0.70, relevancia: 0.30 }, // importan más los años en bruto
+  tecnico:     { años: 0.30, relevancia: 0.70 },
+  experiencia: { años: 0.70, relevancia: 0.30 },
 };
 
 const PRECISION_INSTRUCTIONS = {
@@ -27,12 +31,15 @@ const FOCO_INSTRUCTIONS = {
 
 export async function POST(request) {
   try {
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const { jobText, cvText, config = {}, jobSummary } = await request.json();
 
     if (!jobText || !cvText) {
       return Response.json({ success: false, error: 'Faltan jobText o cvText.' }, { status: 400 });
     }
+
+    // GATE de presupuesto (el gate de IP ya se aplico en pre-summarize).
+    const budget = await checkBudget();
+    if (!budget.allowed) return Response.json({ success: false, error: 'demo_agotada' }, { status: 503 });
 
     const foco = config.foco ?? 'integral';
     const precision = config.precision ?? 'equilibrado';
@@ -101,12 +108,15 @@ Devuelve SOLO JSON válido con esta estructura exacta:
   "skills_gap": [<2-5 skills/requisitos que el candidato NO cumple o no se detectan en el CV>]
 }`;
 
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: MODEL,
       temperature: 0,
       response_format: { type: 'json_object' },
       messages: [{ role: 'user', content: prompt }],
     });
+
+    await recordSpend(PROJECT, costEUR(MODEL, response.usage));
 
     const raw = response.choices?.[0]?.message?.content ?? '{}';
     const parsed = JSON.parse(raw);
@@ -130,15 +140,10 @@ Devuelve SOLO JSON válido con esta estructura exacta:
 
     return Response.json({
       success: true,
-      data: {
-        ...parsed,
-        match_percentage,
-        nivel,
-        exp_split: expSplit,
-      },
+      data: { ...parsed, match_percentage, nivel, exp_split: expSplit },
     });
   } catch (err) {
     console.error('analyze error', err);
-    return Response.json({ success: false, error: err.message ?? 'Error interno.' }, { status: 500 });
+    return Response.json({ success: false, error: 'Error interno.' }, { status: 500 });
   }
 }
